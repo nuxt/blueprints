@@ -86,10 +86,14 @@ export default class Blueprint extends Module {
       return filePath
     }
 
-    rootDir = rootDir || this.blueprintOptions.dir
+    let src = filePath
+    if (!path.isAbsolute(filePath)) {
+      rootDir = rootDir || this.blueprintOptions.dir
+      src = path.join(rootDir, filePath)
+    }
 
     return {
-      src: path.join(rootDir, filePath),
+      src,
       dst: prefix ? path.join(prefix || '', filePath) : filePath,
       dstRelative: filePath
     }
@@ -388,11 +392,11 @@ export default class Blueprint extends Module {
   }
 
   addStyles (stylesheets) {
-    for (let stylesheet of stylesheets) {
-      stylesheet = this.addTemplateIfNeeded(stylesheet)
+    for (const stylesheet of stylesheets) {
+      const stylesheetPath = this.addTemplateIfNeeded(stylesheet)
 
-      if (!this.nuxt.options.css.includes(stylesheet)) {
-        this.nuxt.options.css.push(path.relative(this.nuxt.options.srcDir, path.join(this.nuxt.options.buildDir, stylesheet)))
+      if (!this.nuxt.options.css.includes(stylesheetPath)) {
+        this.nuxt.options.css.push(stylesheetPath)
       }
     }
   }

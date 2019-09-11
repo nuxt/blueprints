@@ -121,21 +121,21 @@ describe('blueprint', () => {
       }
     }
     const options = {
-      dir: '/my-test-dir'
+      dir: '/var/nuxt/my-blueprint-dir'
     }
 
     const blueprint = new Blueprint(nuxt, options)
     blueprint.addModule = jest.fn()
     blueprint.addTemplate = jest.fn(({ src, fileName }) => ({ dst: fileName }))
 
-    const mapping = await blueprint.resolveFiles({
+    const files = {
       assets: [
         'assets/my-asset.zip'
       ],
       layouts: [
         'layouts/docs.tmpl.vue',
         {
-          src: '/my-test-dir/layouts/docs.tmpl.vue',
+          src: 'layouts/docs.tmpl.vue',
           dst: 'layouts/docs.tmpl.vue',
           dstRelative: 'layouts/docs.tmpl.vue'
         }
@@ -144,7 +144,10 @@ describe('blueprint', () => {
         'modules/my-module.js'
       ],
       plugins: [
-        'plugins/my-plugin.$tmpl.js'
+        {
+          src: 'plugins/my-plugin.$tmpl.js',
+          dst: 'plugins/my-plugin.$tmpl.js'
+        }
       ],
       static: [
         'static/my-static.txt'
@@ -164,26 +167,29 @@ describe('blueprint', () => {
           dstRelative: 'should-be-skipped'
         }
       ]
-    })
+    }
 
-    // TODO: the paths containing ../ below are wrong
+    const mapping = await blueprint.resolveFiles(files)
+
+    // for non-template paths below the paths are listed,
+    /// relatively from the buildDir
     expect(mapping).toEqual({
-      'custom-file.log': '../../../my-test-dir/custom-file.log',
+      'custom-file.log': '../my-blueprint-dir/custom-file.log',
       'custom-build-path/file.js': 'blueprint/custom-build-path/file.js',
       'layouts/docs.tmpl.vue': 'blueprint/layouts/docs.vue',
-      'modules/my-module.js': '../../../my-test-dir/modules/my-module.js',
+      'modules/my-module.js': '../my-blueprint-dir/modules/my-module.js',
       'plugins/my-plugin.$tmpl.js': 'blueprint/plugins/my-plugin.blueprint.js',
-      'styles/my-test.css': '../../../my-test-dir/styles/my-test.css'
+      'styles/my-test.css': '../my-blueprint-dir/styles/my-test.css'
     })
 
     expect(nuxt.options.layouts).toEqual({ docs: './blueprint/layouts/docs.vue' })
     expect(nuxt.options.plugins).toEqual([{ src: '/var/nuxt/.nuxt/blueprint/plugins/my-plugin.blueprint.js' }])
-    expect(nuxt.options.css).toEqual(['../.nuxt/my-test-dir/styles/my-test.css'])
+    expect(nuxt.options.css).toEqual(['/var/nuxt/my-blueprint-dir/styles/my-test.css'])
     expect(nuxt.options.build.plugins).toEqual([{ apply: expect.any(Function) }])
     expect(nuxt.hook).toHaveBeenCalledTimes(1)
     expect(nuxt.hook).toHaveBeenCalledWith('build:done', expect.any(Function))
     expect(blueprint.addModule).toHaveBeenCalledTimes(1)
-    expect(blueprint.addModule).toHaveBeenCalledWith('/my-test-dir/modules/my-module.js')
+    expect(blueprint.addModule).toHaveBeenCalledWith('/var/nuxt/my-blueprint-dir/modules/my-module.js')
 
     expect(consola.warn).toHaveBeenCalledTimes(1)
     expect(consola.warn).toHaveBeenCalledWith(expect.stringContaining('Duplicate layout registration'))
