@@ -22,7 +22,7 @@
     "build": "bili --file-name blueprint.js",
     "example": "nuxt dev example",
     "lint": "eslint --fix --ext .js src test example",
-    "release": "yarn lint && yarn test && standard-version",
+    "release": "yarn lint && yarn test && yarn build && standard-version",
     "test": "yarn test:unit",
     "test:unit": "jest test/unit"
   },
