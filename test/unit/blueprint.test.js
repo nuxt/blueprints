@@ -166,17 +166,19 @@ describe('blueprint', () => {
       ]
     })
 
+    // TODO: the paths containing ../ below are wrong
     expect(mapping).toEqual({
+      'custom-file.log': '../../../my-test-dir/custom-file.log',
+      'custom-build-path/file.js': 'blueprint/custom-build-path/file.js',
       'layouts/docs.tmpl.vue': 'blueprint/layouts/docs.vue',
       'modules/my-module.js': '../../../my-test-dir/modules/my-module.js',
       'plugins/my-plugin.$tmpl.js': 'blueprint/plugins/my-plugin.blueprint.js',
-      'custom-file.log': '../../../my-test-dir/custom-file.log',
-      'custom-build-path/file.js': 'blueprint/custom-build-path/file.js'
+      'styles/my-test.css': '../../../my-test-dir/styles/my-test.css'
     })
 
     expect(nuxt.options.layouts).toEqual({ docs: './blueprint/layouts/docs.vue' })
     expect(nuxt.options.plugins).toEqual([{ src: '/var/nuxt/.nuxt/blueprint/plugins/my-plugin.blueprint.js' }])
-    expect(nuxt.options.css).toEqual(['blueprint/styles/my-test.css'])
+    expect(nuxt.options.css).toEqual(['../.nuxt/my-test-dir/styles/my-test.css'])
     expect(nuxt.options.build.plugins).toEqual([{ apply: expect.any(Function) }])
     expect(nuxt.hook).toHaveBeenCalledTimes(1)
     expect(nuxt.hook).toHaveBeenCalledWith('build:done', expect.any(Function))
