@@ -392,11 +392,13 @@ export default class Blueprint extends Module {
   }
 
   addStyles (stylesheets) {
-    for (const stylesheet of stylesheets) {
-      const stylesheetPath = this.addTemplateIfNeeded(stylesheet)
+    for (let stylesheet of stylesheets) {
+      if (typeof stylesheet === 'object') {
+        stylesheet = this.addTemplateIfNeeded(stylesheet)
+      }
 
-      if (!this.nuxt.options.css.includes(stylesheetPath)) {
-        this.nuxt.options.css.push(stylesheetPath)
+      if (stylesheet && !this.nuxt.options.css.includes(stylesheet)) {
+        this.nuxt.options.css.push(stylesheet)
       }
     }
   }
