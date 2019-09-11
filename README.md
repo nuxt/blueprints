@@ -12,6 +12,12 @@
 
 This module is considered experimental and a work-in-progress.
 
+## Edge dependencies
+
+Due to the use of [static class features](https://github.com/tc39/proposal-static-class-features/), it's required to use at least [Node v12.4.0](https://node.green/#ESNEXT-candidate--stage-3--static-class-fields).
+
+Also at this moment the blueprints module only works with [`nuxt-edge`](https://www.npmjs.com/package/nuxt-edge) as some required Nuxt.js features have not officially been released.
+
 ## Examples
 
 Check the [example](./example) for a simple blueprint example.
@@ -37,11 +43,11 @@ Copyright (c) Nuxt.js Team
 [npm-downloads-src]: https://img.shields.io/npm/dt/@nuxt/blueprints.svg?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/@nuxt/blueprints
 
-[circle-ci-src]: https://img.shields.io/circleci/project/github/@nuxt/blueprints.svg?style=flat-square
-[circle-ci-href]: https://circleci.com/gh/@nuxt/blueprints
+[circle-ci-src]: https://img.shields.io/circleci/project/github/nuxt/blueprints.svg?style=flat-square
+[circle-ci-href]: https://circleci.com/gh/nuxt/blueprints
 
-[codecov-src]: https://img.shields.io/codecov/c/github/@nuxt/blueprints.svg?style=flat-square
-[codecov-href]: https://codecov.io/gh/@nuxt/blueprints
+[codecov-src]: https://img.shields.io/codecov/c/github/nuxt/blueprints.svg?style=flat-square
+[codecov-href]: https://codecov.io/gh/nuxt/blueprints
 
 [license-src]: https://img.shields.io/npm/l/@nuxt/blueprints.svg?style=flat-square
 [license-href]: https://npmjs.com/package/@nuxt/blueprints
