@@ -1,6 +1,6 @@
 {
   "name": "@nuxt/blueprints",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Module for Nuxt.js to create distributable micro-apps",
   "main": "dist/blueprint.js",
   "repository": "https://github.com/nuxt/blueprints",
