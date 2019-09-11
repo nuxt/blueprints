@@ -1,3 +1,5 @@
-body {
+div {
   background-color: <%= options.backgroundColor %>;
+  padding: 1rem;
+  margin: 1rem auto;
 }
