@@ -18,28 +18,6 @@ Check the [example](./example) for a simple blueprint example.
 
 If you are looking for a more advanced example, have a look at the [NuxtPress repository](https://github.com/nuxt/press) which is also build using blueprints.
 
-## Setup
-
-1. Add `@nuxt/blueprints` dependency to your project
-
-```bash
-yarn add @nuxt/blueprints # or npm install @nuxt/blueprints
-```
-
-2. Add `@nuxt/blueprints` to the `modules` section of `nuxt.config.js`
-
-```js
-{
-  modules: [
-    // Simple usage
-    '@nuxt/blueprints',
-
-    // With options
-    ['@nuxt/blueprints', { /* module options */ }]
-  ]
-}
-```
-
 ## Development
 
 1. Clone this repository
