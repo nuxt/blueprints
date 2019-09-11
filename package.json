@@ -4,7 +4,9 @@
   "description": "Module for Nuxt.js to create distributable micro-apps",
   "main": "dist/blueprint.js",
   "repository": "https://github.com/nuxt/blueprints",
-  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "files": [
     "dist",
