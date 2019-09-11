@@ -1,0 +1,33 @@
+# Dependencies
+node_modules
+
+# Lock files
+package-lock.json
+**/yarn.lock
+
+# Logs
+*.log
+
+# Build/dist folders
+.nuxt*
+dist
+
+# Coverage reports
+reports
+coverage
+*.lcov
+.nyc_output
+
+# Editors
+*.iml
+.idea
+.vscode
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Env vars
+.env*
+
