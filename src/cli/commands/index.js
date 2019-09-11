@@ -15,8 +15,13 @@ export default class Commands {
     let templates = options.templates
 
     let discoveryPath = dir
-    let typeKey = args[0]
+    let typeKey = args[0] || ''
     let blueprint
+
+    if (!typeKey) {
+      consola.fatal(`A template key identifying the template you wish to eject is required`)
+      return
+    }
 
     if (blueprints) {
       [blueprint, typeKey] = args[0].split('/')
@@ -29,8 +34,8 @@ export default class Commands {
       }
     }
 
-    if (!await exists(discoveryPath)) {
-      consola.fatal(`Blueprint path '${discoveryPath}' does not exists`)
+    if (!discoveryPath || !await exists(discoveryPath)) {
+      consola.fatal(`Blueprint path '${discoveryPath}' is empty or does not exists`)
       return
     }
 
@@ -48,7 +53,7 @@ export default class Commands {
       typeKey = normalizeInput(typeKey)
     }
 
-    if (typeKey === 'theme') {
+    if (typeKey === 'theme' || typeKey === 'themes') {
       await ejectTheme(blueprint, discoveryPath)
       return
     }

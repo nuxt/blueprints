@@ -1,9 +1,10 @@
+import consola from 'consola'
 import { NuxtCommand, options } from '@nuxt/cli-edge'
-import run from './run'
+import Commands from './commands'
 
 const { common } = options
 
-export default async function runBlueprint (options = {}) {
+export default async function runCommand (options = {}) {
   const {
     name = 'blueprint',
     description
@@ -18,12 +19,17 @@ export default async function runBlueprint (options = {}) {
     },
     async run (cmd) {
       // remove argv's so nuxt doesnt pick them up as rootDir
-      const argv = cmd.argv._.splice(0, cmd.argv._.length)
+      const [command = '', ...args] = cmd.argv._.splice(0, cmd.argv._.length)
+
+      if (!command || !Commands[command]) {
+        consola.fatal(`Unrecognized command '${command}'`)
+        return
+      }
 
       const config = await cmd.getNuxtConfig()
       const nuxt = await cmd.getNuxt(config)
 
-      return run(argv, nuxt, options)
+      return Commands[command](args, nuxt, options)
     }
   })
 }

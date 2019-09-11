@@ -1,28 +1,16 @@
 import consola from 'consola'
 import fsExtra from 'fs-extra'
 import Blueprint from 'src/blueprint'
+
 import * as utils from 'src/utils'
+import { resetUtilMocks as _resetUtilMocks } from 'test-utils'
+jest.mock('src/utils')
+const resetUtilMocks = utilNames => _resetUtilMocks(utils, utilNames)
 
 jest.mock('fs-extra')
-jest.mock('src/utils')
-
-consola.mockTypes(() => jest.fn())
-
-const _utils = jest.requireActual('src/utils')
-
-function resetUtilMocks (utilNames) {
-  for (const utilName of utilNames) {
-    utils[utilName].mockReset()
-    utils[utilName].mockImplementation(_utils[utilName])
-  }
-}
 
 describe('blueprint', () => {
-  beforeAll(() => {
-    for (const utilName in _utils) {
-      utils[utilName].mockImplementation(_utils[utilName])
-    }
-  })
+  beforeAll(() => resetUtilMocks())
 
   afterEach(() => jest.clearAllMocks())
 

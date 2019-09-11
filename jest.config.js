@@ -5,7 +5,7 @@ module.exports = {
 
   forceExit: true,
 
-  // setupFilesAfterEnv: ['./test/utils/setup'],
+  setupFilesAfterEnv: ['./test/utils/setup'],
 
   coverageDirectory: './coverage',
 
