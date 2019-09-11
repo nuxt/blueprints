@@ -12,17 +12,17 @@
 
 This module is considered experimental and a work-in-progress.
 
-## Edge dependencies
-
-Due to the use of [static class features](https://github.com/tc39/proposal-static-class-features/), it's required to use at least [Node v12.4.0](https://node.green/#ESNEXT-candidate--stage-3--static-class-fields).
-
-Also at this moment the blueprints module only works with [`nuxt-edge`](https://www.npmjs.com/package/nuxt-edge) as some required Nuxt.js features have not officially been released.
-
 ## Examples
 
 Check the [example](./example) for a simple blueprint example.
 
 If you are looking for a more advanced example, have a look at the [NuxtPress repository](https://github.com/nuxt/press) which is also build using blueprints.
+
+## Edge dependency
+
+At this moment the blueprints module only works with [`nuxt-edge`](https://www.npmjs.com/package/nuxt-edge) as some required Nuxt.js features have not yet been released officially.
+
+If you wish to run the example from this repo, you need to use at least [Node v12.4.0](https://node.green/#ESNEXT-candidate--stage-3--static-class-fields) due to the use of [static class features](https://github.com/tc39/proposal-static-class-features/). Those are transpiled on release using [@babel/plugin-proposal-class-properties](https://babeljs.io/docs/en/babel-plugin-proposal-class-properties), but the example runs from source.
 
 ## Development
 
