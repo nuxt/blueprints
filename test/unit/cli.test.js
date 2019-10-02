@@ -1,4 +1,4 @@
-import { NuxtCommand } from '@nuxt/cli-edge'
+import { NuxtCommand } from '@nuxt/cli'
 import consola from 'consola'
 import runCommand from 'src/cli'
 
@@ -7,7 +7,7 @@ import { resetUtilMocks as _resetUtilMocks } from 'test-utils'
 jest.mock('src/utils')
 const resetUtilMocks = utilNames => _resetUtilMocks(utils, utilNames)
 
-jest.mock('@nuxt/cli-edge')
+jest.mock('@nuxt/cli')
 jest.mock('src/cli/commands')
 
 describe('cli', () => {

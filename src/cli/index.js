@@ -1,5 +1,5 @@
 import consola from 'consola'
-import { NuxtCommand, options } from '@nuxt/cli-edge'
+import { NuxtCommand, options } from '@nuxt/cli'
 import Commands from './commands'
 
 const { common } = options

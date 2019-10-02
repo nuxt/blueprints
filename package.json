@@ -30,8 +30,6 @@
     "test:unit": "jest test/unit"
   },
   "dependencies": {
-    "@nuxt/cli-edge": "latest",
-    "@nuxt/core-edge": "latest",
     "consola": "^2.10.1",
     "defu": "^0.0.3",
     "fs-extra": "^8.1.0",
@@ -39,7 +37,7 @@
     "klaw": "^3.0.0"
   },
   "peerDependencies": {
-    "nuxt-edge": "^2.10.0"
+    "nuxt": "^2.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",

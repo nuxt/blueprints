@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import consola from 'consola'
 import defu from 'defu'
-import { Module } from '@nuxt/core-edge'
+import { Module } from '@nuxt/core'
 import {
   ucfirst,
   runOnceGuard,
