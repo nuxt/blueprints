@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import consola from 'consola'
 import defu from 'defu'
+import serveStatic from 'serve-static'
 import { Module } from '@nuxt/core'
 import {
   ucfirst,
@@ -66,8 +67,16 @@ export default class Blueprint extends Module {
     }
   }
 
-  init (files) {
+  async init (files) {
     this.setup()
+
+    // static files need to be added immediately
+    // because otherwise the serveStatic middleware
+    // is added after the server has already started listening
+    if (files && files.static) {
+      await this.resolveFiles({ static: files.static })
+      delete files.static
+    }
 
     this.nuxt.hook('builder:prepared', async () => {
       if (this.blueprintOptions.autodiscover) {
@@ -105,6 +114,8 @@ export default class Blueprint extends Module {
 
   async autodiscover (rootDir, { validate, filter } = {}) {
     rootDir = rootDir || this.blueprintOptions.dir
+    filter = filter || this.blueprintOptions.filter
+    validate = validate || this.blueprintOptions.validate
 
     if (!rootDir || !await exists(rootDir)) {
       return {}
@@ -122,7 +133,8 @@ export default class Blueprint extends Module {
       const parsedFile = path.parse(file)
 
       // TODO: fix sub folders
-      const { dir: type, ext } = parsedFile
+      const { dir, ext } = parsedFile
+      const [type] = dir.split(path.sep)
 
       // dont add anything without an extension -> not a proper file
       if (!type && !ext) {
@@ -382,13 +394,19 @@ export default class Blueprint extends Module {
     this.nuxt.options.plugins[pluginsStrategy](...newPlugins)
   }
 
-  addStatic (staticFiles) {
-    this.nuxt.hook('build:done', () => {
-      /* istanbul ignore next */
-      return Promise.all(staticFiles.map((file) => {
-        return this.copyFile(this.createTemplatePaths(file))
-      }))
-    })
+  async addStatic (staticFiles) {
+    /* istanbul ignore next */
+    const files = await Promise.all(staticFiles.map((file) => {
+      return this.addTemplateOrCopy(file)
+    }))
+
+    const staticMiddleware = serveStatic(
+      path.resolve(this.nuxt.options.buildDir, path.dirname(files[0])),
+      this.nuxt.options.render.static
+    )
+    staticMiddleware.prefix = this.nuxt.options.render.static.prefix
+
+    this.addServerMiddleware(staticMiddleware)
   }
 
   addStyles (stylesheets) {
@@ -403,8 +421,15 @@ export default class Blueprint extends Module {
     }
   }
 
-  addApp () {
-    consola.warn(`${this.constructor.name}: app overrides are not (yet) implemented`)
+  addApp (appFiles) {
+    return Promise.all(appFiles.map(({ src, dst }) => {
+      return this.addTemplate({
+        src,
+        // dst has blueprint id and app dir name added, remove those
+        // eg dst: blueprint/app/router.js -> router.js
+        fileName: dst.substr(dst.indexOf('app') + 3)
+      })
+    }))
   }
 
   addStore () {

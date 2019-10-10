@@ -8,6 +8,7 @@ jest.mock('src/utils')
 const resetUtilMocks = utilNames => _resetUtilMocks(utils, utilNames)
 
 jest.mock('fs-extra')
+jest.mock('serve-static', () => () => jest.fn())
 
 describe('blueprint', () => {
   beforeAll(() => resetUtilMocks())
@@ -105,7 +106,10 @@ describe('blueprint', () => {
         },
         layouts: {},
         plugins: [],
-        css: []
+        css: [],
+        render: {
+          static: {}
+        }
       }
     }
     const options = {
@@ -115,6 +119,7 @@ describe('blueprint', () => {
     const blueprint = new Blueprint(nuxt, options)
     blueprint.addModule = jest.fn()
     blueprint.addTemplate = jest.fn(({ src, fileName }) => ({ dst: fileName }))
+    blueprint.addServerMiddleware = jest.fn()
 
     const files = {
       assets: [
@@ -143,6 +148,12 @@ describe('blueprint', () => {
       styles: [
         'styles/my-test.css'
       ],
+      app: [
+        {
+          src: 'app/empty.js',
+          dst: 'app/empty.js'
+        }
+      ],
       custom: [
         'custom-file.log',
         {
@@ -167,6 +178,7 @@ describe('blueprint', () => {
       'layouts/docs.tmpl.vue': 'blueprint/layouts/docs.vue',
       'modules/my-module.js': '../my-blueprint-dir/modules/my-module.js',
       'plugins/my-plugin.$tmpl.js': 'blueprint/plugins/my-plugin.blueprint.js',
+      'static/my-static.txt': '../my-blueprint-dir/static/my-static.txt',
       'styles/my-test.css': '../my-blueprint-dir/styles/my-test.css'
     })
 
@@ -174,13 +186,91 @@ describe('blueprint', () => {
     expect(nuxt.options.plugins).toEqual([{ src: '/var/nuxt/.nuxt/blueprint/plugins/my-plugin.blueprint.js' }])
     expect(nuxt.options.css).toEqual(['/var/nuxt/my-blueprint-dir/styles/my-test.css'])
     expect(nuxt.options.build.plugins).toEqual([{ apply: expect.any(Function) }])
-    expect(nuxt.hook).toHaveBeenCalledTimes(1)
-    expect(nuxt.hook).toHaveBeenCalledWith('build:done', expect.any(Function))
+    expect(blueprint.addServerMiddleware).toHaveBeenCalledTimes(1)
+    expect(blueprint.addServerMiddleware).toHaveBeenCalledWith(expect.any(Function))
     expect(blueprint.addModule).toHaveBeenCalledTimes(1)
     expect(blueprint.addModule).toHaveBeenCalledWith('/var/nuxt/my-blueprint-dir/modules/my-module.js')
+    expect(blueprint.addTemplate).toHaveBeenCalledTimes(5)
+    expect(blueprint.addTemplate).toHaveBeenCalledWith(expect.objectContaining({ src: 'app/empty.js' }))
 
     expect(consola.warn).toHaveBeenCalledTimes(1)
     expect(consola.warn).toHaveBeenCalledWith(expect.stringContaining('Duplicate layout registration'))
+  })
+
+  test('createTemplatePaths returns when filePath is already object', () => {
+    const blueprint = new Blueprint({}, { id: 'test' })
+
+    const filePath = { src: 'test.js' }
+
+    expect(blueprint.createTemplatePaths(filePath)).toBe(filePath)
+  })
+
+  test('resolveAppPath', () => {
+    const nuxt = {
+      options: {
+        srcDir: '/test-src',
+        dir: {
+          app: 'app'
+        }
+      }
+    }
+
+    const blueprint = new Blueprint(nuxt, { id: 'test' })
+    expect(blueprint.resolveAppPath({ dstRelative: 'rel' })).toEqual('/test-src/app/test/rel')
+  })
+
+  test('resolveAppOverrides exists', async () => {
+    utils.exists.mockReturnValue(true)
+
+    const nuxt = {
+      options: {
+        srcDir: '/test-src',
+        dir: {
+          app: 'app'
+        }
+      }
+    }
+    const templates = [
+      {
+        src: '/my-src/test.js',
+        dstRelative: 'test.js'
+      }
+    ]
+
+    const blueprint = new Blueprint(nuxt, { id: 'test' })
+    await expect(blueprint.resolveAppOverrides(templates)).resolves.toEqual([{
+      src: '/test-src/app/test/test.js',
+      dstRelative: 'test.js'
+    }])
+  })
+
+  test('resolveAppOverrides does not exists', async () => {
+    let callCount = 0
+    utils.exists.mockImplementation(() => {
+      callCount++
+      return callCount > 2
+    })
+
+    const nuxt = {
+      options: {
+        srcDir: '/test-src',
+        dir: {
+          app: 'app'
+        }
+      }
+    }
+    const templates = [
+      {
+        src: '/my-src/test.js',
+        dstRelative: 'test.js'
+      }
+    ]
+
+    const blueprint = new Blueprint(nuxt, { id: 'test' })
+    await expect(blueprint.resolveAppOverrides(templates)).resolves.toEqual([{
+      src: '/my-src/test.js',
+      dstRelative: 'test.js'
+    }])
   })
 
   test('copyFile logs on error', () => {
@@ -245,14 +335,6 @@ describe('blueprint', () => {
     const plugins = ['plugins/my-plugin.js']
 
     await expect(blueprint.addPlugins(plugins)).rejects.toThrowError('Unsupported')
-  })
-
-  test('appDir overrides warns not implemented', () => {
-    const blueprint = new Blueprint({})
-    blueprint.addApp()
-
-    expect(consola.warn).toHaveBeenCalledTimes(1)
-    expect(consola.warn).toHaveBeenCalledWith(expect.stringContaining('not (yet) implemented'))
   })
 
   test('store module warns not implemented', () => {
