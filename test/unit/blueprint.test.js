@@ -191,7 +191,7 @@ describe('blueprint', () => {
     expect(blueprint.addModule).toHaveBeenCalledTimes(1)
     expect(blueprint.addModule).toHaveBeenCalledWith('/var/nuxt/my-blueprint-dir/modules/my-module.js')
     expect(blueprint.addTemplate).toHaveBeenCalledTimes(5)
-    expect(blueprint.addTemplate).toHaveBeenCalledWith(expect.objectContaining({ src: 'app/empty.js' }))
+    expect(blueprint.addTemplate).toHaveBeenCalledWith(expect.objectContaining({ fileName: 'empty.js' }))
 
     expect(consola.warn).toHaveBeenCalledTimes(1)
     expect(consola.warn).toHaveBeenCalledWith(expect.stringContaining('Duplicate layout registration'))

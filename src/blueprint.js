@@ -427,7 +427,7 @@ export default class Blueprint extends Module {
         src,
         // dst has blueprint id and app dir name added, remove those
         // eg dst: blueprint/app/router.js -> router.js
-        fileName: dst.substr(dst.indexOf('app') + 3)
+        fileName: dst.substr(dst.indexOf('app') + 4)
       })
     }))
   }
