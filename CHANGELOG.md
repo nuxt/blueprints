@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.3](https://github.com/nuxt/blueprints/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2019-10-10)
+
+
+### Bug Fixes
+
+* strip leading slash from app templates ([0672b74](https://github.com/nuxt/blueprints/commit/0672b7436c63bfc5efb8d3fc77770b3071e0c6e7))
+
 ## [0.1.0-beta.2](https://github.com/nuxt/blueprints/compare/v0.1.0-beta.1...v0.1.0-beta.2) (2019-10-10)
 
 
