@@ -175,8 +175,12 @@ export default class Blueprint extends Module {
     }))
   }
 
+  getPathPrefix(pathPrefix) {
+    return pathPrefix || this.id
+  }
+
   async resolveFiles (files, pathPrefix) {
-    pathPrefix = pathPrefix || this.id
+    pathPrefix = this.getPathPrefix(pathPrefix)
 
     // use an instance var to keep track
     // of final template src/dst mappings
