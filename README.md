@@ -58,7 +58,7 @@ It returns a mapping of the `src` to `dst` for all files
 Copyright (c) Nuxt.js Team
 
 <!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/@nuxt/blueprints/latest.svg?style=flat-square
+[npm-version-src]: https://img.shields.io/npm/v/@nuxt/blueprints/beta.svg?style=flat-square
 [npm-version-href]: https://npmjs.com/package/@nuxt/blueprints
 
 [npm-downloads-src]: https://img.shields.io/npm/dt/@nuxt/blueprints.svg?style=flat-square
