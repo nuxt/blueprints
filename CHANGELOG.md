@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.4](https://github.com/nuxt/blueprints/compare/v0.1.0-beta.3...v0.1.0-beta.4) (2019-10-11)
+
+
+### Bug Fixes
+
+* allow implementor to override pathPrefix, default is to use the id ([cb47cf0](https://github.com/nuxt/blueprints/commit/cb47cf01a4401611b40f130f720ad1c3cf444b9f))
+
 ## [0.1.0-beta.3](https://github.com/nuxt/blueprints/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2019-10-10)
 
 
